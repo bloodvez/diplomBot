@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "trashbot",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -10,9 +10,17 @@
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "axios": "^0.21.1",
+    "bootstrap": "^4.6.0",
+    "discord.js": "^13.6.0",
+    "discord.js-commando": "^0.12.3",
+    "mobx": "^6.3.2",
+    "mobx-react-lite": "^3.2.0",
     "react": "^17.0.2",
+    "react-bootstrap": "^1.6.1",
     "react-dom": "^17.0.2",
-    "react-scripts": "4.0.3",
+    "react-scripts": "^5.0.0",
+    "socket.io": "^4.1.2",
     "typescript": "^4.1.2",
     "web-vitals": "^1.0.1"
   },
