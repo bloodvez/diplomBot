@@ -1,7 +1,12 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
 import { TrashContext } from "../..";
-import { Header, VolumeSliderInput } from "./components";
+import {
+  Header,
+  VolumeSliderInput,
+  MainBodyItemWrapper,
+  MainBodyItemButton,
+} from "./components";
 
 const VolumeSlider = observer(() => {
   const trash = React.useContext(TrashContext);
@@ -11,7 +16,7 @@ const VolumeSlider = observer(() => {
   };
 
   return (
-    <>
+    <MainBodyItemWrapper>
       <Header>Volume</Header>
       <VolumeSliderInput
         type={"range"}
@@ -21,8 +26,8 @@ const VolumeSlider = observer(() => {
         }}
       />
       <p>Volume: {trash?.volume}</p>
-      <button onClick={onClick}>Set Volume</button>
-    </>
+      <MainBodyItemButton onClick={onClick}>Set Volume</MainBodyItemButton>
+    </MainBodyItemWrapper>
   );
 });
 

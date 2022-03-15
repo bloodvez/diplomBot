@@ -17,3 +17,6 @@ ReactDOM.render(
   </BrowserRouter>,
   document.getElementById("root")
 );
+
+//@ts-ignore
+window.trash = trashContext

@@ -1,7 +1,5 @@
 import styled from "styled-components";
-
-const bgColor = "#3c3c3c";
-const bgColorHover = "#5e5e5e";
+import { BG_COLOR, BG_COLOR_HOVER } from "../../constants";
 
 export const MainBodyWrapper = styled.div`
   display: flex;
@@ -10,7 +8,8 @@ export const MainBodyWrapper = styled.div`
 `;
 
 export const Header = styled.div`
-  background-color: ${bgColor};
+  background-color: ${BG_COLOR};
+  width: 100%;
   text-align: center;
   text-decoration: none;
   font-size: 3vh;
@@ -21,6 +20,7 @@ export const Header = styled.div`
 export const VolumeSliderInput = styled.input`
   -webkit-appearance: none;
   appearance: none;
+  width: 100%;
   height: 25px;
   background: #d3d3d3;
   outline: none;
@@ -37,6 +37,36 @@ export const VolumeSliderInput = styled.input`
     appearance: none;
     width: 25px;
     height: 25px;
-    background: ${bgColor};
+    background: ${BG_COLOR};
     cursor: pointer;
+`;
+
+export const MainBodyItemWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 0.5vh;
+`;
+
+export const MainBodyItemButton = styled.button`
+background-color: ${BG_COLOR};
+border: none;
+color: white;
+padding: 8px 24px;
+text-align: center;
+text-decoration: none;
+display: inline-block;
+font-size: 16px;
+cursor: pointer;
+:hover {
+  transition: 0.2s;
+  background-color: ${BG_COLOR_HOVER};
+}
+`;
+
+export const ControlsButtonsWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
 `;

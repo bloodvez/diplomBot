@@ -1,12 +1,13 @@
 import React from "react";
-import { Header, MainBodyWrapper } from "./components";
+import { MainBodyWrapper } from "./components";
+import Controls from "./Controls";
 import VolumeSlider from "./VolumeSlider";
 
 function MainBody() {
   return (
     <MainBodyWrapper>
       <VolumeSlider />
-      <Header>Header2</Header>
+      <Controls></Controls>
     </MainBodyWrapper>
   );
 }
