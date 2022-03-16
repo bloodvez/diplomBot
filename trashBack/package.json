@@ -1,0 +1,14 @@
+{
+  "name": "trashback",
+  "version": "0.0.1",
+  "description": "",
+  "main": "trashServer.js",
+  "scripts": {
+    "startserver": "node ../build/trashServer.js",
+    "dev": "tsc --watch",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

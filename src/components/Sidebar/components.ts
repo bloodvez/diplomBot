@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { BG_COLOR, BG_COLOR_HOVER } from "../../constants";
+import { BG_COLOR, BG_COLOR_HOVER, LIGHT_GRAY } from "../../constants";
 
 export const SidebarWrapper = styled.div`
   display: flex;
@@ -35,10 +35,10 @@ export const TimeSliderInput = styled.input`
 appearance:none;
   width: 100%;
   height: 25px;
-  background: #d3d3d3;
+  background: ${LIGHT_GRAY};
   outline: none;
   background-image: linear-gradient(${BG_COLOR}, ${BG_COLOR_HOVER});
-  background-size: 70% 100%;
+  background-size: 0% 100%;
   background-repeat: no-repeat;
 
   &::-webkit-slider-thumb {

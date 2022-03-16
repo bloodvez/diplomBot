@@ -15,7 +15,7 @@ const Controls = observer(() => {
 
   if(refRange.current){
     refRange.current!.style.backgroundSize =
-    `${(trash!.currentTime * 100) / 100}% 100%`;
+    `${(trash!.videoManager.currentTime * 100) / 100}% 100%`;
   }
 
   return (
@@ -26,13 +26,13 @@ const Controls = observer(() => {
         type={"range"}
         min={0}
         max={100}
-        value={trash?.currentTime}
+        value={trash?.videoManager.currentTime}
         readOnly={true}
       ></TimeSliderInput>
       <ControlsButtonsWrapper>
-        <MainBodyItemButton onClick={trash?.stop}>Stop</MainBodyItemButton>
-        <MainBodyItemButton onClick={trash?.play}>Play</MainBodyItemButton>
-        <MainBodyItemButton onClick={trash?.skip}>Skip</MainBodyItemButton>
+        <MainBodyItemButton onClick={trash?.videoManager.stop}>Stop</MainBodyItemButton>
+        <MainBodyItemButton onClick={trash?.videoManager.play}>Play</MainBodyItemButton>
+        <MainBodyItemButton onClick={trash?.videoManager.skip}>Skip</MainBodyItemButton>
       </ControlsButtonsWrapper>
     </MainBodyItemWrapper>
   );
