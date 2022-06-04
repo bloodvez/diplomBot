@@ -1,15 +1,20 @@
 import React from "react";
 import { MainBodyWrapper } from "./components";
-import Controls from "./Controls";
-import VideosQueue from "./VideosQueue/VideosQueue";
-import VolumeSlider from "./VolumeSlider";
+import UserControl from "./UserControl";
+// import Controls from "./Controls";
+// import VideosQueue from "./VideosQueue/VideosQueue";
+// import VolumeSlider from "./VolumeSlider";
+
+// const userStore = new UserStore();
+// setTimeout(() =>{userStore.fetch()}, 1000)
 
 function MainBody() {
   return (
     <MainBodyWrapper>
-      <VolumeSlider />
+      <UserControl />
+      {/* <VolumeSlider />
       <Controls />
-      <VideosQueue />
+      <VideosQueue /> */}
     </MainBodyWrapper>
   );
 }

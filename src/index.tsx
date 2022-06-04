@@ -3,10 +3,10 @@ import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import App from "./App";
-import { ITrashState, TrashState } from "./trashState";
+import { ITrashState, TrashStore } from "./state/trashState";
 
-export const TrashContext = React.createContext<ITrashState | null>(null);
-const trashContext = new TrashState();
+const trashContext = new TrashStore();
+export const TrashContext = React.createContext<ITrashState>(trashContext);
 
 //TODO uninstall router and webvitals
 ReactDOM.render(

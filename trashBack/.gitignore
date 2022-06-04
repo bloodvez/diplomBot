@@ -8,6 +8,8 @@
 
 # testing
 /coverage
+tokens.json
+*.rest
 
 # production
 /build

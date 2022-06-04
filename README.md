@@ -18,7 +18,7 @@ npm run build # makes build
 Backend files are located in `/trashBack` folder
 
 ```sh
-npm run startserver # launches express backend server
-npm run dev # starts typescript complier
+npm run dev # start dev server
 npm run build # makes build 
+npm run startserver # launches express backend server
 ```
