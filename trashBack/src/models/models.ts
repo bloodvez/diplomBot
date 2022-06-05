@@ -20,7 +20,7 @@ export class User extends Model<UserAttributes> implements UserAttributes {
 User.init(
   {
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       allowNull: true,
       primaryKey: true,
       autoIncrement: true,

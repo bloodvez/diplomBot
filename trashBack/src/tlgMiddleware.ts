@@ -4,7 +4,13 @@ import {
   MenuMiddleware,
   deleteMenuFromContext,
 } from "grammy-inline-menu";
-import { addExpToUser, getUser } from "./controllers/userController";
+import {
+  addExpToUser,
+  getListOfUsers,
+  getUser,
+} from "./controllers/userController";
+import { User } from "./models/models";
+import { generateRefreshToken } from "./utils";
 // import { getUser } from "./controllers/userController";
 
 const menuTemplate = new MenuTemplate<Context>(
@@ -39,6 +45,13 @@ menuTemplate.interact("Show Exp", "showExpButton", {
     return "..";
   },
 });
+menuTemplate.interact("Send Message", "sendMessageButton", {
+  joinLastRow: true,
+  do: async (ctx) => {
+    sendMessageToUsers(ctx);
+    return "..";
+  },
+});
 menuTemplate.interact("Закрыть", "closeButton", {
   do: closeMenu,
 });
@@ -48,15 +61,30 @@ async function closeMenu(ctx: Context) {
   return false;
 }
 
+export async function registerNewUser(ctx: Context) {
+  const { user } = await ctx.getAuthor();
+  let userTlgID = user.id;
+  const DbUser = await getUser(userTlgID);
+  if (DbUser) return;
+  const refreshToken = generateRefreshToken({ tlgID: userTlgID });
+  await User.create({ tlgID: userTlgID, refreshToken: refreshToken });
+  return false;
+}
+
 export function errorHandler(ctx: BotError) {
   console.log("error in grammy:", ctx);
 }
 
-// Ignore all the other messages if the're not from private chat
 export function onTextMiddleware(ctx: Context) {
-  if (ctx.message.chat.type !== "private") return;
+  // Ignore all the other messages if the're not from private chat
+  if (ctx.message.chat.type === "private") menuMiddleware.replyToContext(ctx);
+}
 
-  menuMiddleware.replyToContext(ctx);
+export async function sendMessageToUsers(ctx: Context) {
+  const list = await getListOfUsers();
+  list.forEach(elem =>{
+      ctx.api.sendMessage(elem, 'Hi')
+  })
 }
 
 export const menuMiddleware = new MenuMiddleware("/", menuTemplate);

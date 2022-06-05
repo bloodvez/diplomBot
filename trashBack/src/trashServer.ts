@@ -3,12 +3,13 @@ import { Bot } from "grammy";
 import router from "./routes";
 import { readFile } from "node:fs";
 import { ITrashServer, IUserToken } from "./interfaces";
-import dotenv from "dotenv";
 import {
   errorHandler,
   menuMiddleware,
   onTextMiddleware,
+  registerNewUser,
 } from "./tlgMiddleware";
+import dotenv from "dotenv";
 dotenv.config();
 
 // const IP_ADDRESS = "localhost";
@@ -60,7 +61,14 @@ class TrashServer implements ITrashServer {
 
   initBot() {
     this.tlgBot = new Bot(process.env.BOT_TOKEN);
-    this.tlgBot.command("start", (ctx) => menuMiddleware.replyToContext(ctx));
+    this.tlgBot.command("start", (ctx) => {
+      if (ctx.message.chat.type !== "private") {
+        ctx.api.sendMessage(ctx.message.from.id,"Type anything to start");
+        return
+      }
+      registerNewUser(ctx)
+      menuMiddleware.replyToContext(ctx);
+    });
     this.tlgBot.use(menuMiddleware);
     this.tlgBot.on("message:text", onTextMiddleware);
 
@@ -74,9 +82,9 @@ class TrashServer implements ITrashServer {
   }
 
   botFunc(text: string) {
-    this.tlgBot.api.sendMessage(266536855, text).catch(err =>{
-      console.log('grammy err:', err.error_code);
-    })
+    this.tlgBot.api.sendMessage(266536855, text).catch((err) => {
+      console.log("grammy err:", err.error_code);
+    });
   }
 }
 
