@@ -1,7 +1,10 @@
 import { makeAutoObservable } from "mobx";
-import { authorisedRequest } from "../http/authorisedRequest";
-
-type IUserState = "LOADING" | "NORMAL_RESPONSE" | "ERROR";
+import { $authHost, $host } from "../http";
+import {
+  IUserState,
+  UserRefreshResponse,
+  UserTestResponse,
+} from "./interfaces";
 
 export interface ITrashState {
   loading: boolean;
@@ -10,6 +13,8 @@ export interface ITrashState {
   setText(text: string): void;
   setLoading(state: boolean): void;
   fetchUserData(): void;
+  refreshToken(): void;
+  dispatchAction(actionType: string, payload: any): void;
 }
 
 export class TrashStore implements ITrashState {
@@ -37,12 +42,41 @@ export class TrashStore implements ITrashState {
   }
 
   async fetchUserData() {
-    const res = await authorisedRequest();
-    if (res.type !== 'ERROR'){
-        this.setUserState('NORMAL_RESPONSE');
-        this.setText(res.text);
-    } else {
-        this.setUserState('ERROR');
+    try {
+      const res = await $authHost.get<UserTestResponse>("api/user/test");
+      this.setText(res.data.text);
+      this.setUserState("NORMAL_RESPONSE");
+    } catch (error) {
+      console.log("error in fetchUserData", error);
+      this.setUserState("ERROR");
+    }
+  }
+
+  async refreshToken() {
+    try {
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (refreshToken === null) return console.log("no token");
+
+      const res = await $host.post<UserRefreshResponse>("api/user/refresh", {
+        refreshToken: refreshToken,
+      });
+
+      localStorage.setItem("accessToken", res.data.accessToken);
+      console.log("changed accessToken");
+    } catch (error) {
+      console.log("error in refreshToken", error);
+      this.setUserState("ERROR");
+    }
+  }
+
+  async dispatchAction(actionType: string = "sendMsg", payload: Object) {
+    try {
+      $authHost.post("api/user/action", {
+        actionType: actionType,
+        payload: payload,
+      });
+    } catch (error) {
+      console.log("error in dispatchAction", error);
     }
   }
 }

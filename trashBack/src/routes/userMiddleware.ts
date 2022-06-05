@@ -1,11 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import { IUserToken } from "../interfaces";
 import { sign, verify } from "jsonwebtoken";
+import trashServer from "../trashServer";
 
 const array1 = [
   {
     tlgID: 266536855,
-    refreshToken: "",
+    refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0bGdJRCI6IjI2NjUzNjg1NSIsImlhdCI6MTY1NDM1OTM3OX0.GYUZMMhHJUxk0hufBqBBpcNgZdE-bvBCxHsGN5PNJ7k",
   },
 ];
 
@@ -49,6 +50,7 @@ export function refreshToken(req: Request, res: Response, next: NextFunction) {
   if (req.body.refreshToken == null) return res.sendStatus(204);
 
   const refreshToken = req.body.refreshToken;
+  
   const found = array1.find((elem) => elem.refreshToken === refreshToken);
 
   if (!found) return res.sendStatus(403);
@@ -70,6 +72,18 @@ export function userTestFunc(
   const found = array1.find((elem) => elem.tlgID === parseInt(req.user.tlgID));
   if (found) res.json(foo);
   else res.sendStatus(403);
+}
+
+export function userAction(
+  req: TypedRequestBody,
+  res: Response,
+  next: NextFunction
+): void {
+  if (req.body.payload.text && req.body.payload.text !== ''){
+    trashServer.botFunc(req.body.payload.text)
+  } else{
+    res.sendStatus(204)
+  }
 }
 
 function generateAccessToken(user: { tlgID: number }) {

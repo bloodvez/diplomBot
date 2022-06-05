@@ -9,11 +9,31 @@ const UserControl = observer(() => {
     trash.fetchUserData();
   }, [trash]);
 
+  const [text, setText] = React.useState("");
+
   return (
     <>
       {trash.userState === "LOADING" && <Loading />}
       {trash.userState === "NORMAL_RESPONSE" && <>{trash.text}</>}
       {trash.userState === "ERROR" && <>{"Error"}</>}
+      <button onClick={() => trash.refreshToken()}>refresh</button>
+      <button onClick={() => trash.fetchUserData()}>fetch</button>
+      <input
+        placeholder="Text"
+        type="text"
+        // name='uname'
+        // value={uname}
+        onChange={(e) => {
+          setText(e.target.value);
+        }}
+      />
+      <button
+        onClick={() => {
+          trash.dispatchAction('sendMsg', {'text': text});
+        }}
+      >
+        send
+      </button>
     </>
   );
 });

@@ -4,13 +4,14 @@ TrashServer.initBot()
 
 // const trashServer = new TrashServer(IP_ADDRESS, PORT);
 
-const start = async () => {
+const startDB = async () => {
     try {
         await sequelize.authenticate()
         await sequelize.sync()
+        console.log('Connection has been established successfully.');
     } catch (e) {
         console.log(e)
     }
 }
 
-start();
+startDB();
