@@ -1,8 +1,13 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import styled from "styled-components";
-import MainBody from "./components/MainBody/MainBody";
-import Sidebar from "./components/Sidebar/Sidebar";
+import { TrashContext } from ".";
+import LoggingIn from "./components/LoggingIn";
+import AdminControl from "./components/MainBody/AdminControl";
+import UserControl from "./components/MainBody/UserControl";
+import UserInfo from "./components/MainBody/UserInfo";
+
 
 const Root = styled.div`
 display: flex;
@@ -14,11 +19,24 @@ min-width: 65vw;
 `;
 
 const App = observer(() => {
+  const trash = React.useContext(TrashContext);
+
+  React.useEffect(() => {
+    trash.fetchUserData();
+    trash.fetchProfilePicture();
+  }, []);
+
   return (
-    <Root>
-      <Sidebar />
-      <MainBody />
-    </Root>
+    <BrowserRouter>
+      <Root>
+        <Routes>
+          <Route path="/" element={<UserInfo />} />
+          <Route path="actions" element={<UserControl />} />
+          <Route path="admin" element={<AdminControl />} />
+          <Route path="login" element={<LoggingIn />} />
+        </Routes>
+      </Root>
+    </BrowserRouter>
   );
 });
 

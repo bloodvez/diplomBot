@@ -3,14 +3,15 @@ import {
   authenticateToken,
   refreshToken,
   userAction,
-  userTestFunc,
+  userGetProfilePicture,
+  userGetInfo,
 } from "./userMiddleware";
 
-const router = Router();
+const userRouter = Router();
 
-router.get("/test", authenticateToken, userTestFunc);
-router.post("/action", authenticateToken, userAction);
-// router.post("/register", userRegister);
-router.post("/refresh", refreshToken);
+userRouter.get("/", authenticateToken, userGetInfo);
+userRouter.get("/picture", authenticateToken, userGetProfilePicture);
+userRouter.post("/action", authenticateToken, userAction);
+userRouter.post("/refresh", refreshToken);
 
-export default router;
+export default userRouter;

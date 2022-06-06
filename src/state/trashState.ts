@@ -1,31 +1,47 @@
 import { makeAutoObservable } from "mobx";
 import { $authHost, $host } from "../http";
 import {
+  IUserRole,
   IUserState,
   UserRefreshResponse,
-  UserTestResponse,
+  UserDataResponse,
 } from "./interfaces";
 
 export interface ITrashState {
   loading: boolean;
   userState: IUserState;
-  text: string;
+  tlgId: string;
+  exp: number;
+  profilePictureBlob: string;
+  role : IUserRole;
+  name: string;
   setText(text: string): void;
+  setExp(amount: number): void;
   setLoading(state: boolean): void;
+  setProfilePictureBlob(blobText: string): void;
   fetchUserData(): void;
   refreshToken(): void;
+  fetchProfilePicture(): void;
   dispatchAction(actionType: string, payload: any): void;
 }
 
 export class TrashStore implements ITrashState {
   loading: boolean;
   userState: IUserState;
-  text: string;
+  tlgId: string;
+  exp: number;
+  profilePictureBlob: string;
+  role: IUserRole;
+  name: string;
 
   constructor() {
     this.loading = false;
     this.userState = "LOADING";
-    this.text = "";
+    this.tlgId = "";
+    this.exp = 0;
+    this.profilePictureBlob = "./img/logo.jpg";
+    this.role = 'USER'
+    this.name = ''
     makeAutoObservable(this);
   }
 
@@ -38,17 +54,49 @@ export class TrashStore implements ITrashState {
   }
 
   setText(text: string) {
-    this.text = text;
+    this.tlgId = text;
+  }
+
+  setProfilePictureBlob(blobText: string) {
+    this.profilePictureBlob = blobText;
+  }
+
+  setExp(amount: number) {
+    this.exp = amount;
+  }
+
+  setRole(role: IUserRole) {
+    this.role = role;
+  }
+
+  setName(name:string){
+    this.name = name;
   }
 
   async fetchUserData() {
     try {
-      const res = await $authHost.get<UserTestResponse>("api/user/test");
-      this.setText(res.data.text);
+      const res = await $authHost.get<UserDataResponse>("api/user/");
+      this.setText(res.data.id);
+      this.setExp(res.data.exp);
+      this.setName(res.data.name)
+      this.setRole(res.data.role)
       this.setUserState("NORMAL_RESPONSE");
     } catch (error) {
       console.log("error in fetchUserData", error);
       this.setUserState("ERROR");
+    }
+  }
+
+  async fetchProfilePicture() {
+    try {
+      const res = await $authHost.get("api/user/picture", {
+        responseType: "blob",
+        timeout: 30000,
+      });
+      let objectURL = URL.createObjectURL(res.data);
+      this.setProfilePictureBlob(objectURL)
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -62,7 +110,6 @@ export class TrashStore implements ITrashState {
       });
 
       localStorage.setItem("accessToken", res.data.accessToken);
-      console.log("changed accessToken");
     } catch (error) {
       console.log("error in refreshToken", error);
       this.setUserState("ERROR");

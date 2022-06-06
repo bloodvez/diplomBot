@@ -1,12 +1,16 @@
 import React from "react";
 import { LoadingDiv, Spinner } from "./components";
 
-function Loading() {
+interface LoadingProp {
+  text?: string;
+}
+
+function Loading(prop:LoadingProp) {
   return (
     <LoadingDiv>
       <Spinner src={"/img/logo.jpg"} alt="img" />
       <br></br>
-      <span>Loading</span>
+      <span>{prop.text || 'Loading'}</span>
     </LoadingDiv>
   );
 }

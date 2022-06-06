@@ -9,6 +9,7 @@
 # testing
 /coverage
 tokens.json
+memes.json
 *.rest
 
 # production

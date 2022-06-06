@@ -1,15 +1,16 @@
 import express, { Application } from "express";
+import cors from 'cors'
 import { Bot } from "grammy";
 import router from "./routes";
 import { readFile } from "node:fs";
 import { ITrashServer, IUserToken } from "./interfaces";
 import {
   errorHandler,
-  menuMiddleware,
   onTextMiddleware,
   registerNewUser,
 } from "./tlgMiddleware";
 import dotenv from "dotenv";
+import { menuMiddleware } from "./tlgInlineMenus";
 dotenv.config();
 
 // const IP_ADDRESS = "localhost";
@@ -23,26 +24,16 @@ class TrashServer implements ITrashServer {
 
   constructor(ip_address: string, port: number) {
     this.expressApp = express();
-
-    // This thing allows us to use CORS
-    this.expressApp.use(function (req, res, next) {
-      res.setHeader("Access-Control-Allow-Origin", "*");
-      res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-      res.header(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-      );
-      next();
-    });
-
-    this.expressApp.use(express.static("build"));
+    this.expressApp.use(express.static('build'));
+    this.expressApp.use(express.static('public'));
     this.expressApp.use(express.json());
+    this.expressApp.use(cors());
     this.expressApp.use("/api", router);
 
-    this.expressApp.get("/", (req, res) => {
-      res.send("hi");
-      console.log("hi");
-    });
+    // this.expressApp.get("/", (req, res) => {
+    //   res.send("hi");
+    //   console.log("hi");
+    // });
 
     this.expressApp.listen(port, ip_address, () => {
       console.log(`listening on ${ip_address}:${port}`);
@@ -81,10 +72,13 @@ class TrashServer implements ITrashServer {
     this.tlgBot.start();
   }
 
-  botFunc(text: string) {
-    this.tlgBot.api.sendMessage(266536855, text).catch((err) => {
-      console.log("grammy err:", err.error_code);
-    });
+  async botFunc(text: string) {
+    // this.tlgBot.api.sendMessage(266536855, text).catch((err) => {
+    //   console.log("grammy err:", err.error_code);
+    // });
+
+    // const user = await this.tlgBot.api.getChat(1018480988)
+    // console.log(user);
   }
 }
 

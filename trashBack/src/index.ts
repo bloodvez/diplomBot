@@ -1,4 +1,6 @@
 import TrashServer from "./trashServer";
+
+// const trashServer = TrashServer
 import sequelize from "./db";
 TrashServer.initBot()
 

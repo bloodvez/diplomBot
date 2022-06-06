@@ -5,16 +5,20 @@ interface UserAttributes {
   id?: number | null;
   tlgID: number;
   refreshToken: string;
-  role: string | null;
+  role: IUserRole;
   exp: number;
+  name: string;
 }
 
+export type IUserRole = "USER" | "ADMIN";
+
 export class User extends Model<UserAttributes> implements UserAttributes {
-  exp: number;
+  exp!: number;
   id!: number;
   tlgID!: number;
   refreshToken!: string;
-  role!: string | null;
+  role!: IUserRole;
+  name!: string;
 }
 
 User.init(
@@ -29,6 +33,7 @@ User.init(
     refreshToken: { type: DataTypes.STRING },
     role: { type: DataTypes.STRING, defaultValue: "USER" },
     exp: { type: DataTypes.INTEGER, defaultValue: 0 },
+    name: { type: DataTypes.STRING },
   },
   {
     sequelize,

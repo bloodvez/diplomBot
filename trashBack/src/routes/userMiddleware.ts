@@ -4,12 +4,21 @@ import trashServer from "../trashServer";
 import dotenv from "dotenv";
 import { findRefreshToken, getUser } from "../controllers/userController";
 import { generateAccessToken } from "../utils";
+import { getProfilePictureURL } from "../tlgMiddleware";
+import { IUserRole } from "../models/models";
 dotenv.config();
 
 interface TypedRequestBody extends Request {
   user: {
     tlgID: string;
   };
+}
+
+interface UserDataResponse {
+  id: number;
+  exp: number;
+  role: IUserRole;
+  name: string;
 }
 
 export function authenticateToken(
@@ -19,12 +28,11 @@ export function authenticateToken(
 ) {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
+
   if (token == null) return res.sendStatus(401);
 
   verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
     if (err) return res.sendStatus(403);
-    console.log(user);
-
     // @ts-ignore
     req.user = user;
     next();
@@ -50,38 +58,36 @@ export async function refreshToken(
   });
 }
 
-export async function userTestFunc(
+export async function userGetInfo(
   req: TypedRequestBody,
-  res: Response,
-  next: NextFunction
+  res: Response
 ): Promise<void> {
-  // let foo = { text: `${Math.floor(Math.random() * 100)}` };
   const found = await getUser(parseInt(req.user.tlgID));
   if (!found) res.sendStatus(403);
-  res.json({id: found.tlgID, exp: found.exp});
+  const respJSON: UserDataResponse = { id: found.tlgID, exp: found.exp, role: found.role, name: found.name};
+  res.json(respJSON);
 }
 
-export function userAction(
+export async function userGetProfilePicture(
   req: TypedRequestBody,
-  res: Response,
-  next: NextFunction
-): void {
+  res: Response
+): Promise<void> {
+  const profilePicURL = await getProfilePictureURL(
+    parseInt(req.user.tlgID),
+    trashServer.tlgBot.api
+  );
+  const fileURL = `https://api.telegram.org/file/bot${process.env.BOT_TOKEN}/${profilePicURL}`;
+  const downloadPromise = await fetch(fileURL);
+  const downloadBuffer = await downloadPromise.arrayBuffer();
+  const buff = Buffer.from(downloadBuffer);
+  res.type("jpg");
+  res.send(buff);
+}
+
+export function userAction(req: TypedRequestBody, res: Response): void {
   if (req.body.payload.text && req.body.payload.text !== "") {
     trashServer.botFunc(req.body.payload.text);
   } else {
     res.sendStatus(204);
   }
 }
-
-// export function userRegister(
-//   req: Request<{}, {}, IUserToken>,
-//   res: Response
-// ): void {
-//   if (req.body.tlgID == null) res.sendStatus(204);
-
-//   let user = { tlgID: req.body.tlgID };
-//   const accessToken = generateAccessToken(user);
-//   const refreshToken = generateRefreshToken(user);
-//   // array1[0].refreshToken = refreshToken;
-//   res.json({ accessToken: accessToken, refreshToken: refreshToken });
-// }

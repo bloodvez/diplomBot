@@ -1,4 +1,5 @@
 import React from "react";
+import Sidebar from "../Sidebar/Sidebar";
 import { MainBodyWrapper } from "./components";
 import UserControl from "./UserControl";
 // import Controls from "./Controls";
@@ -10,12 +11,15 @@ import UserControl from "./UserControl";
 
 function MainBody() {
   return (
-    <MainBodyWrapper>
-      <UserControl />
-      {/* <VolumeSlider />
+    <>
+      <Sidebar />
+      <MainBodyWrapper>
+        {/* <UserControl /> */}
+        {/* <VolumeSlider />
       <Controls />
       <VideosQueue /> */}
-    </MainBodyWrapper>
+      </MainBodyWrapper>
+    </>
   );
 }
 

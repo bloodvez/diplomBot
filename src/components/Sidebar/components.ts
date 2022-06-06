@@ -4,7 +4,8 @@ import { BG_COLOR, BG_COLOR_HOVER, LIGHT_GRAY } from "../../constants";
 export const SidebarWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  max-width: 256px;
+  flex: 0 1 10vw;
+  align-items: center;
   background-color: ${BG_COLOR};
 `;
 
@@ -12,6 +13,8 @@ export const Logo = styled.img`
   border-radius: 50%;
   border: solid;
   border-width: 5px;
+  height: 10vw;
+  width: 10vw;
 `;
 
 export const SidebarButton = styled.button`

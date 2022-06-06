@@ -2,12 +2,12 @@ import axios, { AxiosRequestConfig } from "axios";
 
 const $host = axios.create({
   // baseURL: process.env.REACT_APP_API_URL,
-  baseURL: 'http://192.168.200.46:5555/',
+  baseURL: 'http://h.ladvez.net:5556/',
 });
 
 const $authHost = axios.create({
   // baseURL: process.env.REACT_APP_API_URL
-  baseURL: 'http://192.168.200.46:5555/',
+  baseURL: 'http://h.ladvez.net:5556/',
 })
 
 const authInterceptor = (config:AxiosRequestConfig): AxiosRequestConfig => {

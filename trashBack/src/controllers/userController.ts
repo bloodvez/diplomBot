@@ -23,12 +23,3 @@ export async function findRefreshToken(refreshToken: string): Promise<User> {
   const foundUser = await User.findOne({ where: { refreshToken } });
   if (foundUser) return foundUser;
 }
-
-export async function addExpToUser(
-  userID: number,
-  amount: number
-): Promise<User> {
-  const foundUser = await getUser(userID);
-  const incrementResult = foundUser.increment("exp", { by: amount });
-  return incrementResult;
-}
