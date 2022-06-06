@@ -6,29 +6,10 @@ import {
   UserRefreshResponse,
   UserDataResponse,
   IUser,
+  ITrashState,
+  UserDataSend,
 } from "./interfaces";
 
-export interface ITrashState {
-  loading: boolean;
-  userState: IUserState;
-  tlgId: string;
-  exp: number;
-  profilePictureBlob: string;
-  role : IUserRole;
-  name: string;
-  createdAt: Date | null;
-  userList : IUser[] | null
-  setText(text: string): void;
-  setExp(amount: number): void;
-  setLoading(state: boolean): void;
-  setUserList(list:any): void
-  setProfilePictureBlob(blobText: string): void;
-  fetchUserData(): void;
-  refreshToken(): void;
-  fetchProfilePicture(): void;
-  fetchlistOfUsers(): void;
-  dispatchAction(actionType: string, payload: any): void;
-}
 
 export class TrashStore implements ITrashState {
   loading: boolean;
@@ -90,7 +71,7 @@ export class TrashStore implements ITrashState {
     this.createdAt = date;
   }
 
-  async fetchUserData() {
+  async fetchCurrentUserData() {
     try {
       const res = await $authHost.get<UserDataResponse>("api/user/");
       this.setText(res.data.id);
@@ -102,6 +83,25 @@ export class TrashStore implements ITrashState {
     } catch (error) {
       console.log("error in fetchUserData", error);
       this.setUserState("ERROR");
+    }
+  }
+
+  async fetchUserData(tlgID: number): Promise<UserDataResponse | null> {
+    try {
+      const res = await $authHost.get<UserDataResponse>(`api/user/getUser?id=${tlgID}`);
+      return res.data;
+    } catch (error) {
+      console.log("error in fetchUserData", error);
+      this.setUserState("ERROR");
+      return null
+    }
+  }
+
+  async sendUserData(data:UserDataSend): Promise<void> {
+    try {
+      const res = await $authHost.post<UserDataResponse>("api/user/postUser", data);
+    } catch (error) {
+      console.log("error in fetchUserData", error);
     }
   }
 
@@ -120,7 +120,7 @@ export class TrashStore implements ITrashState {
 
   async fetchlistOfUsers(){
     try {
-      const res = await $authHost.get<IUser[]>("api/user/users");
+      const res = await $authHost.get<IUser[]>("api/user/getUsers");
       this.setUserList(res.data)
     } catch (error) {
       console.log(error);

@@ -2,7 +2,11 @@ import { NextFunction, Request, Response } from "express";
 import { verify } from "jsonwebtoken";
 import trashServer from "../trashServer";
 import dotenv from "dotenv";
-import { findRefreshToken, getListOfUsers, getUser } from "../controllers/userController";
+import {
+  findRefreshToken,
+  getListOfUsers,
+  getUser,
+} from "../controllers/userController";
 import { generateAccessToken } from "../utils";
 import { getProfilePictureURL } from "../tlgMiddleware";
 import { IUserRole } from "../models/models";
@@ -63,10 +67,51 @@ export async function userGetInfo(
   req: TypedRequestBody,
   res: Response
 ): Promise<void> {
-  const found = await getUser(parseInt(req.user.tlgID));
-  if (!found) res.sendStatus(404);
-  const respJSON: UserDataResponse = { id: found.tlgID, exp: found.exp, role: found.role, name: found.name, createdAt: found.createdAt};
-  res.json(respJSON);
+  if (req.query.id) {
+    const found = await getUser(parseInt(req.query.id.toString()));
+    if (!found) {
+      res.sendStatus(404);
+      return;
+    }
+    const respJSON: UserDataResponse = {
+      id: found.tlgID,
+      exp: found.exp,
+      role: found.role,
+      name: found.name,
+      createdAt: found.createdAt,
+    };
+    res.json(respJSON);
+  } else {
+    const found = await getUser(parseInt(req.user.tlgID));
+    if (!found) {
+      res.sendStatus(404);
+      return;
+    }
+    const respJSON: UserDataResponse = {
+      id: found.tlgID,
+      exp: found.exp,
+      role: found.role,
+      name: found.name,
+      createdAt: found.createdAt,
+    };
+    res.json(respJSON);
+  }
+}
+
+export async function userUpdateUserInfo(
+  req: TypedRequestBody,
+  res: Response
+): Promise<void> {
+  if(!req.body.tlgID){
+    res.sendStatus(204);
+  }
+  const found = await getUser(parseInt(req.body.tlgID));
+  if (!found) {
+    res.sendStatus(404);
+  } else {
+    found.update({name: req.body.name, exp:req.body.exp, role: req.body.role})
+    res.sendStatus(200);
+  }
 }
 
 export async function userGetProfilePicture(
@@ -92,7 +137,7 @@ export async function userListOfUsers(
   const found = await getListOfUsers();
   if (!found) res.sendStatus(404);
 
-  res.json(found)
+  res.json(found);
 }
 
 export function userAction(req: TypedRequestBody, res: Response): void {

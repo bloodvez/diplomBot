@@ -10,7 +10,7 @@ const UserInfo = observer(() => {
   const trash = React.useContext(TrashContext);
   const [timeString, settimeString] = React.useState("");
   React.useEffect(() => {
-    trash.fetchUserData();
+    trash.fetchCurrentUserData();
     trash.fetchProfilePicture();
 
     if (trash.createdAt) {

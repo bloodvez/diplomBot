@@ -12,14 +12,15 @@ function AdminControl() {
   React.useEffect(() => {
     if (trash.role !== "ADMIN") {
       navigate("/", { replace: true });
+      return
     }
-  });
+    trash.fetchlistOfUsers()
+  }, []);
   return (
     <>
       <Sidebar />
       <MainBodyWrapper>
         <MenuHeader>Пользователи</MenuHeader>
-        <button onClick={() => trash.fetchlistOfUsers()}>fetch users</button>
         <AdminUserList />
       </MainBodyWrapper>
     </>

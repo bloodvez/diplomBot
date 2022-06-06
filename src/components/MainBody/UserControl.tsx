@@ -13,7 +13,7 @@ const UserControl = observer(() => {
       <MainBodyWrapper>
       <MenuHeader>Действия</MenuHeader>
         <button onClick={() => trash.refreshToken()}>refresh</button>
-        <button onClick={() => trash.fetchUserData()}>fetch</button>
+        <button onClick={() => trash.fetchCurrentUserData()}>fetch</button>
       </MainBodyWrapper>
     </>
   );
