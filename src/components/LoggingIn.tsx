@@ -1,11 +1,13 @@
 import React from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { TrashContext } from "..";
 import Loading from "./Loading/Loading";
 
 function LoggingIn() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [searchParams, setSearchParams] = useSearchParams();
   const param = searchParams.get("tk");
+  const trash = React.useContext(TrashContext);
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -19,7 +21,9 @@ function LoggingIn() {
       const data = await response.json();
       localStorage.setItem("accessToken", data.accessToken);
       localStorage.setItem("refreshToken", param);
-      navigate("../", { replace: true });
+      trash.fetchUserData();
+      trash.fetchProfilePicture();
+      navigate("/");
     };
 
     // call the function

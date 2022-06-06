@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import styled from "styled-components";
 import { TrashContext } from ".";
 import LoggingIn from "./components/LoggingIn";
-import AdminControl from "./components/MainBody/AdminControl";
+import AdminControl from "./components/MainBody/AdminControl/AdminControl";
 import UserControl from "./components/MainBody/UserControl";
 import UserInfo from "./components/MainBody/UserInfo";
 
@@ -16,6 +16,7 @@ width: auto
 position: absolute;
 background-color: white;
 min-width: 65vw;
+height 60vh;
 `;
 
 const App = observer(() => {
@@ -24,7 +25,7 @@ const App = observer(() => {
   React.useEffect(() => {
     trash.fetchUserData();
     trash.fetchProfilePicture();
-  }, []);
+  }, [trash]);
 
   return (
     <BrowserRouter>

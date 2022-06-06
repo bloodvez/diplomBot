@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { verify } from "jsonwebtoken";
 import trashServer from "../trashServer";
 import dotenv from "dotenv";
-import { findRefreshToken, getUser } from "../controllers/userController";
+import { findRefreshToken, getListOfUsers, getUser } from "../controllers/userController";
 import { generateAccessToken } from "../utils";
 import { getProfilePictureURL } from "../tlgMiddleware";
 import { IUserRole } from "../models/models";
@@ -19,6 +19,7 @@ interface UserDataResponse {
   exp: number;
   role: IUserRole;
   name: string;
+  createdAt: string;
 }
 
 export function authenticateToken(
@@ -63,8 +64,8 @@ export async function userGetInfo(
   res: Response
 ): Promise<void> {
   const found = await getUser(parseInt(req.user.tlgID));
-  if (!found) res.sendStatus(403);
-  const respJSON: UserDataResponse = { id: found.tlgID, exp: found.exp, role: found.role, name: found.name};
+  if (!found) res.sendStatus(404);
+  const respJSON: UserDataResponse = { id: found.tlgID, exp: found.exp, role: found.role, name: found.name, createdAt: found.createdAt};
   res.json(respJSON);
 }
 
@@ -82,6 +83,16 @@ export async function userGetProfilePicture(
   const buff = Buffer.from(downloadBuffer);
   res.type("jpg");
   res.send(buff);
+}
+
+export async function userListOfUsers(
+  req: TypedRequestBody,
+  res: Response
+): Promise<void> {
+  const found = await getListOfUsers();
+  if (!found) res.sendStatus(404);
+
+  res.json(found)
 }
 
 export function userAction(req: TypedRequestBody, res: Response): void {

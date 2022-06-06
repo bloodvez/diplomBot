@@ -70,3 +70,12 @@ export const ControlsButtonsWrapper = styled.div`
   justify-content: space-around;
   width: 100%;
 `;
+
+export const MenuHeader = styled.div`
+  background-color: ${BG_COLOR};
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  font-size: 2vh;
+  padding: 1vh 0px;
+`;

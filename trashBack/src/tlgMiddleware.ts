@@ -1,5 +1,5 @@
 import { Api, BotError, Context } from "grammy";
-import { getListOfUsers, getUser } from "./controllers/userController";
+import { getListOfUsersIDS, getUser } from "./controllers/userController";
 import { User } from "./models/models";
 import { menuMiddleware } from "./tlgInlineMenus";
 import { generateRefreshToken } from "./utils";
@@ -45,7 +45,7 @@ export function onTextMiddleware(ctx: Context) {
 }
 
 export async function sendMessageToUsers(text: string, ctx: Context) {
-  const list = await getListOfUsers();
+  const list = await getListOfUsersIDS();
   list.forEach((elem) => {
     ctx.api.sendMessage(elem, text).catch((err) => {
       console.log("error when sending message", err.error_code);

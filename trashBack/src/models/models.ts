@@ -8,6 +8,7 @@ interface UserAttributes {
   role: IUserRole;
   exp: number;
   name: string;
+  createdAt: string;
 }
 
 export type IUserRole = "USER" | "ADMIN";
@@ -19,6 +20,7 @@ export class User extends Model<UserAttributes> implements UserAttributes {
   refreshToken!: string;
   role!: IUserRole;
   name!: string;
+  createdAt: string;
 }
 
 User.init(
@@ -34,6 +36,7 @@ User.init(
     role: { type: DataTypes.STRING, defaultValue: "USER" },
     exp: { type: DataTypes.INTEGER, defaultValue: 0 },
     name: { type: DataTypes.STRING },
+    createdAt: { type: DataTypes.STRING },
   },
   {
     sequelize,

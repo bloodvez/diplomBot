@@ -12,11 +12,16 @@ export async function getUser(tlgID: number): Promise<User> {
   if (foundUser) return foundUser;
 }
 
-export async function getListOfUsers(): Promise<number[]> {
+export async function getListOfUsersIDS(): Promise<number[]> {
   const someVariable = [...(await User.findAll({ attributes: ["tlgID"] }))].map(
     (user) => user.tlgID
   );
   return someVariable;
+}
+
+export async function getListOfUsers(): Promise<User[]> {
+  const foundUsers = await User.findAll();
+  if (foundUsers) return foundUsers;
 }
 
 export async function findRefreshToken(refreshToken: string): Promise<User> {

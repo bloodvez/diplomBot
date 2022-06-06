@@ -2,7 +2,7 @@ import React from "react";
 import { observer } from "mobx-react-lite";
 import { TrashContext } from "../..";
 import Sidebar from "../Sidebar/Sidebar";
-import { MainBodyWrapper } from "./components";
+import { MainBodyWrapper, MenuHeader } from "./components";
 
 const UserControl = observer(() => {
   const trash = React.useContext(TrashContext);
@@ -11,6 +11,7 @@ const UserControl = observer(() => {
     <>
       <Sidebar />
       <MainBodyWrapper>
+      <MenuHeader>Действия</MenuHeader>
         <button onClick={() => trash.refreshToken()}>refresh</button>
         <button onClick={() => trash.fetchUserData()}>fetch</button>
       </MainBodyWrapper>

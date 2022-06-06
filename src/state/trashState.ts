@@ -5,6 +5,7 @@ import {
   IUserState,
   UserRefreshResponse,
   UserDataResponse,
+  IUser,
 } from "./interfaces";
 
 export interface ITrashState {
@@ -15,13 +16,17 @@ export interface ITrashState {
   profilePictureBlob: string;
   role : IUserRole;
   name: string;
+  createdAt: Date | null;
+  userList : IUser[] | null
   setText(text: string): void;
   setExp(amount: number): void;
   setLoading(state: boolean): void;
+  setUserList(list:any): void
   setProfilePictureBlob(blobText: string): void;
   fetchUserData(): void;
   refreshToken(): void;
   fetchProfilePicture(): void;
+  fetchlistOfUsers(): void;
   dispatchAction(actionType: string, payload: any): void;
 }
 
@@ -33,6 +38,8 @@ export class TrashStore implements ITrashState {
   profilePictureBlob: string;
   role: IUserRole;
   name: string;
+  createdAt: Date | null;
+  userList : IUser[] | null
 
   constructor() {
     this.loading = false;
@@ -42,6 +49,8 @@ export class TrashStore implements ITrashState {
     this.profilePictureBlob = "./img/logo.jpg";
     this.role = 'USER'
     this.name = ''
+    this.createdAt = null
+    this.userList = null
     makeAutoObservable(this);
   }
 
@@ -73,6 +82,14 @@ export class TrashStore implements ITrashState {
     this.name = name;
   }
 
+  setUserList(list:IUser[]){
+    this.userList = list;
+  }
+
+  setCreatedAt(date:Date){
+    this.createdAt = date;
+  }
+
   async fetchUserData() {
     try {
       const res = await $authHost.get<UserDataResponse>("api/user/");
@@ -80,6 +97,7 @@ export class TrashStore implements ITrashState {
       this.setExp(res.data.exp);
       this.setName(res.data.name)
       this.setRole(res.data.role)
+      this.setCreatedAt(new Date(res.data.createdAt))
       this.setUserState("NORMAL_RESPONSE");
     } catch (error) {
       console.log("error in fetchUserData", error);
@@ -95,6 +113,15 @@ export class TrashStore implements ITrashState {
       });
       let objectURL = URL.createObjectURL(res.data);
       this.setProfilePictureBlob(objectURL)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async fetchlistOfUsers(){
+    try {
+      const res = await $authHost.get<IUser[]>("api/user/users");
+      this.setUserList(res.data)
     } catch (error) {
       console.log(error);
     }
