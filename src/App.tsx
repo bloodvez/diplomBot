@@ -4,9 +4,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import styled from "styled-components";
 import { TrashContext } from ".";
 import LoggingIn from "./components/LoggingIn";
-import AdminControl from "./components/MainBody/AdminControl/AdminControl";
+import { AdminControl } from "./components/MainBody/AdminControl/AdminControl";
 import AdminUserEdit from "./components/MainBody/AdminControl/AdminUserEdit";
-import UserControl from "./components/MainBody/UserControl";
+import { UserActions } from "./components/MainBody/UserControl";
 import UserInfo from "./components/MainBody/UserInfo";
 
 const Root = styled.div`
@@ -32,7 +32,7 @@ const App = observer(() => {
       <Root>
         <Routes>
           <Route path="/" element={<UserInfo />} />
-          <Route path="actions" element={<UserControl />} />
+          <Route path="actions" element={<UserActions />} />
           <Route path="admin/" element={<AdminControl />}/>
           <Route path="admin/:id" element={<AdminUserEdit />}/>
           <Route path="login" element={<LoggingIn />} />

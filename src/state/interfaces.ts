@@ -45,6 +45,7 @@ export interface ITrashState {
   setText(text: string): void;
   setExp(amount: number): void;
   setLoading(state: boolean): void;
+  setRole(role: IUserRole): void;
   setUserList(list: any): void;
   setProfilePictureBlob(blobText: string): void;
   fetchCurrentUserData(): void;

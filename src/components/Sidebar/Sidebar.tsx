@@ -6,21 +6,31 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
 import { listStyle, Logo, SidebarWrapper } from "./components";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Sidebar = observer(() => {
   const trash = React.useContext(TrashContext);
   const navigate = useNavigate();
+  const location = useLocation();
+  const path = location.pathname.split("/")[1];
+  const [currentPath, setcurrentPath] = React.useState<string>(path);
+
+  const navigateTo = (path: string) => {
+    if (currentPath === path) return;
+
+    setcurrentPath(path)
+    navigate(`/${path}`, { replace: true });
+  };
 
   return (
     <SidebarWrapper>
-      <Logo src={trash.profilePictureBlob}/>
+      <Logo src={trash.profilePictureBlob} />
       <List sx={listStyle}>
         <ListItem button>
           <ListItemText
             primary="Пользователь"
             onClick={() => {
-              navigate("/", { replace: true });
+              navigateTo("")
             }}
           />
         </ListItem>
@@ -29,7 +39,7 @@ const Sidebar = observer(() => {
           <ListItemText
             primary="Действия"
             onClick={() => {
-              navigate("/actions", { replace: true });
+              navigateTo("actions")
             }}
           />
         </ListItem>
@@ -38,7 +48,7 @@ const Sidebar = observer(() => {
             <ListItemText
               primary="Админ"
               onClick={() => {
-                navigate("/admin", { replace: true });
+                navigateTo("admin");
               }}
             />
           </ListItem>

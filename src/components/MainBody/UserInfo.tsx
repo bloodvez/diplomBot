@@ -1,10 +1,14 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
 import { TrashContext } from "../..";
 import { beautifyDate } from "../../utils";
 import Loading from "../Loading/Loading";
 import Sidebar from "../Sidebar/Sidebar";
-import { MainBodyWrapper, MenuHeader } from "./components";
+import { MainBodyWrapper } from "./components";
+import MenuHeader from "./MenuHeader";
 
 const UserInfo = observer(() => {
   const trash = React.useContext(TrashContext);
@@ -23,13 +27,23 @@ const UserInfo = observer(() => {
     <>
       <Sidebar />
       <MainBodyWrapper>
-        <MenuHeader>Информация о пользователе</MenuHeader>
+        <MenuHeader text="Информация о пользователе"/>
         {trash.userState === "LOADING" && <Loading />}
         {trash.userState === "NORMAL_RESPONSE" && (
           <>
-            <h1>{`Имя: ${trash.name}`}</h1>
-            <h2>{`Опыт: ${trash.exp}`}</h2>
-            <h2>{`Зарегестрирован: ${timeString}`}</h2>
+            <Card>
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  {`Имя: ${trash.name}`}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {`Опыт: ${trash.exp}`}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {`Зарегистрирован: ${timeString}`}
+                </Typography>
+              </CardContent>
+            </Card>
           </>
         )}
         {trash.userState === "ERROR" && <>{"Error"}</>}

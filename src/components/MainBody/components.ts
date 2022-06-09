@@ -71,7 +71,7 @@ export const ControlsButtonsWrapper = styled.div`
   width: 100%;
 `;
 
-export const MenuHeader = styled.div`
+export const MenuHeaderWrapper = styled.div`
   background-color: ${BG_COLOR};
   color: white;
   font-weight: bold;

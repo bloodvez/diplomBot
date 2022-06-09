@@ -10,7 +10,6 @@ import {
   UserDataSend,
 } from "./interfaces";
 
-
 export class TrashStore implements ITrashState {
   loading: boolean;
   userState: IUserState;
@@ -20,7 +19,7 @@ export class TrashStore implements ITrashState {
   role: IUserRole;
   name: string;
   createdAt: Date | null;
-  userList : IUser[] | null
+  userList: IUser[] | null;
 
   constructor() {
     this.loading = false;
@@ -28,10 +27,10 @@ export class TrashStore implements ITrashState {
     this.tlgId = "";
     this.exp = 0;
     this.profilePictureBlob = "./img/logo.jpg";
-    this.role = 'USER'
-    this.name = ''
-    this.createdAt = null
-    this.userList = null
+    this.role = "USER";
+    this.name = "";
+    this.createdAt = null;
+    this.userList = null;
     makeAutoObservable(this);
   }
 
@@ -59,15 +58,15 @@ export class TrashStore implements ITrashState {
     this.role = role;
   }
 
-  setName(name:string){
+  setName(name: string) {
     this.name = name;
   }
 
-  setUserList(list:IUser[]){
+  setUserList(list: IUser[]) {
     this.userList = list;
   }
 
-  setCreatedAt(date:Date){
+  setCreatedAt(date: Date) {
     this.createdAt = date;
   }
 
@@ -76,9 +75,9 @@ export class TrashStore implements ITrashState {
       const res = await $authHost.get<UserDataResponse>("api/user/");
       this.setText(res.data.id);
       this.setExp(res.data.exp);
-      this.setName(res.data.name)
-      this.setRole(res.data.role)
-      this.setCreatedAt(new Date(res.data.createdAt))
+      this.setName(res.data.name);
+      this.setRole(res.data.role);
+      this.setCreatedAt(new Date(res.data.createdAt));
       this.setUserState("NORMAL_RESPONSE");
     } catch (error) {
       console.log("error in fetchUserData", error);
@@ -88,19 +87,30 @@ export class TrashStore implements ITrashState {
 
   async fetchUserData(tlgID: number): Promise<UserDataResponse | null> {
     try {
-      const res = await $authHost.get<UserDataResponse>(`api/user/getUser?id=${tlgID}`);
+      const res = await $authHost.get<UserDataResponse>(
+        `api/user/getUser?id=${tlgID}`
+      );
       return res.data;
     } catch (error) {
       console.log("error in fetchUserData", error);
       this.setUserState("ERROR");
-      return null
+      return null;
     }
   }
 
-  async sendUserData(data:UserDataSend): Promise<number> {
-    const res = await $authHost.post<UserDataResponse>("api/user/postUser", data);
-    if(res.status !== 200){return res.status}
-    return res.status
+  async sendUserData(data: UserDataSend): Promise<number> {
+    try {
+      const res = await $authHost.post<UserDataResponse>(
+        "api/user/postUser",
+        data
+      );
+      if (res.status !== 200) {
+        return res.status;
+      }
+      return res.status;
+    } catch (err:any) {
+      return 404
+    }
   }
 
   async fetchProfilePicture() {
@@ -110,16 +120,16 @@ export class TrashStore implements ITrashState {
         timeout: 30000,
       });
       let objectURL = URL.createObjectURL(res.data);
-      this.setProfilePictureBlob(objectURL)
+      this.setProfilePictureBlob(objectURL);
     } catch (error) {
       console.log(error);
     }
   }
 
-  async fetchlistOfUsers(){
+  async fetchlistOfUsers() {
     try {
       const res = await $authHost.get<IUser[]>("api/user/getUsers");
-      this.setUserList(res.data)
+      this.setUserList(res.data);
     } catch (error) {
       console.log(error);
     }
