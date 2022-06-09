@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from '@emotion/styled'
 import { BG_COLOR, BG_COLOR_HOVER, LIGHT_GRAY } from "../../constants";
 
 export const MainBodyWrapper = styled.div`
@@ -78,4 +78,5 @@ export const MenuHeader = styled.div`
   text-align: center;
   font-size: 2vh;
   padding: 1vh 0px;
+  margin-bottom: 1.5vh;
 `;

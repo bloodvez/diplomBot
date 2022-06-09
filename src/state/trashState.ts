@@ -97,12 +97,10 @@ export class TrashStore implements ITrashState {
     }
   }
 
-  async sendUserData(data:UserDataSend): Promise<void> {
-    try {
-      const res = await $authHost.post<UserDataResponse>("api/user/postUser", data);
-    } catch (error) {
-      console.log("error in fetchUserData", error);
-    }
+  async sendUserData(data:UserDataSend): Promise<number> {
+    const res = await $authHost.post<UserDataResponse>("api/user/postUser", data);
+    if(res.status !== 200){return res.status}
+    return res.status
   }
 
   async fetchProfilePicture() {

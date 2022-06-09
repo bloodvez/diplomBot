@@ -22,51 +22,51 @@ const menuTemplate = new MenuTemplate<Context>(
   (ctx) => `Hey ${ctx.from.first_name}!`
 );
 
-menuTemplate.interact("Add 10 exp", "addExpButton", {
+menuTemplate.interact("Добавить 10 опыта", "addExpButton", {
   do: async (ctx) => {
     const success = await addExpToUser(ctx.from.id, 10);
-    if (!success) return ctx.answerCallbackQuery("Not registered");
-    ctx.answerCallbackQuery("Exp added")
+    if (!success) return ctx.answerCallbackQuery("Вы не зарегестрированы");
+    ctx.answerCallbackQuery("Опыт добавлен")
     return "..";
   },
 });
 
-menuTemplate.interact("Show Exp", "showExpButton", {
+menuTemplate.interact("Показать кол-во опыта", "showExpButton", {
   joinLastRow: true,
   do: async (ctx) => {
     const { user } = await ctx.getAuthor();
     let userID = user.id;
     const DbUser = await getUser(userID);
-    if (!DbUser) return ctx.answerCallbackQuery("Not registered");
+    if (!DbUser) return ctx.answerCallbackQuery("Вы не зарегестрированы");
 
-    await ctx.answerCallbackQuery(`Current exp: ${DbUser.exp}`);
+    await ctx.answerCallbackQuery(`Текущий опыт: ${DbUser.exp}`);
     return "..";
   },
 });
 
-menuTemplate.interact("Roll 0-1000", "rollButton", {
+menuTemplate.interact("Кинуть кубик", "rollButton", {
   joinLastRow: true,
   do: async (ctx) => {
-    const randomRoll = Math.floor(Math.random() * 1000);
-    await ctx.answerCallbackQuery(`you rolled ${randomRoll}`);
+    const randomRoll = Math.floor(Math.random() * 6);
+    await ctx.answerCallbackQuery(`Выпало ${randomRoll}`);
     return "..";
   },
 });
 
-menuTemplate.interact("Send meme", "sendMessageButton", {
+menuTemplate.interact("Отправить рецепт", "sendMessageButton", {
   do: async (ctx) => {
     let i = Math.floor(Math.random() * memes.length);
     const text = memes[i];
-    ctx.reply(`${i}: ${text}`);
+    ctx.reply(`${i}: ${text}`, {parse_mode:'MarkdownV2'});
     return "..";
   },
 });
 
 const loginSubmenuMenu = new MenuTemplate<Context>(
-  (ctx) => `${ctx.from.first_name}, let's log you in`
+  (ctx) => `${ctx.from.first_name}, Здесь можно получить ссылку для логина`
 );
 
-loginSubmenuMenu.interact("Login", "loginButton", {
+loginSubmenuMenu.interact("Полчить ссылку", "loginButton", {
   do: async (ctx) => {
     const { user } = await ctx.getAuthor();
     let userID = user.id;
@@ -81,7 +81,7 @@ loginSubmenuMenu.interact("Login", "loginButton", {
 });
 loginSubmenuMenu.manualRow(createBackMainMenuButtons());
 
-menuTemplate.submenu("Login", "unique", loginSubmenuMenu, {
+menuTemplate.submenu("Логин", "unique", loginSubmenuMenu, {
   joinLastRow: true,
 });
 

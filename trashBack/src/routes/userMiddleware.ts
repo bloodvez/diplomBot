@@ -103,7 +103,7 @@ export async function userUpdateUserInfo(
   res: Response
 ): Promise<void> {
   if(!req.body.tlgID){
-    res.sendStatus(204);
+    res.sendStatus(418);
   }
   const found = await getUser(parseInt(req.body.tlgID));
   if (!found) {
@@ -144,6 +144,6 @@ export function userAction(req: TypedRequestBody, res: Response): void {
   if (req.body.payload.text && req.body.payload.text !== "") {
     trashServer.botFunc(req.body.payload.text);
   } else {
-    res.sendStatus(204);
+    res.sendStatus(418);
   }
 }

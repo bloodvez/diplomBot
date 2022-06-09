@@ -36,7 +36,7 @@ User.init(
     role: { type: DataTypes.STRING, defaultValue: "USER" },
     exp: { type: DataTypes.INTEGER, defaultValue: 0 },
     name: { type: DataTypes.STRING },
-    createdAt: { type: DataTypes.STRING },
+    createdAt: { type: DataTypes.DATE },
   },
   {
     sequelize,

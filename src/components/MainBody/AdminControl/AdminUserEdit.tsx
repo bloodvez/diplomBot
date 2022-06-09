@@ -1,10 +1,15 @@
 import React from "react";
-import { Button, Dropdown, Form } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import { TrashContext } from "../../..";
 import { IUserRole } from "../../../state/interfaces";
+import TextField from "@mui/material/TextField";
 import Sidebar from "../../Sidebar/Sidebar";
 import { MainBodyWrapper, MenuHeader } from "../components";
+import { Button, Select, SelectChangeEvent } from "@mui/material";
+import MenuItem from "@mui/material/MenuItem";
+import Stack from "@mui/material/Stack";
+import CircularProgress from "@mui/material/CircularProgress";
+import Snackbar from "@mui/material/Snackbar";
 
 function AdminUserEdit() {
   const location = useLocation();
@@ -15,6 +20,8 @@ function AdminUserEdit() {
   const [name, setName] = React.useState<string>("");
   const [role, setRole] = React.useState<IUserRole>("USER");
   const [exp, setExp] = React.useState<number>(0);
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [snackbarOpen, setsnackbarOpen] = React.useState(false);
 
   React.useEffect(() => {
     trash.fetchUserData(parseInt(id)).then((data) => {
@@ -24,69 +31,71 @@ function AdminUserEdit() {
     });
   }, [trash, id]);
 
-  const sendData = () => {
+  const handleSnackbarClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setsnackbarOpen(false);
+  };
+
+  const sendData = async () => {
+    setLoading(true);
     const payload = { name: name, role: role, exp: exp, tlgID: id };
-    trash.sendUserData(payload)
-    navigate('/admin')
+    const resCode = await trash.sendUserData(payload);
+    if (resCode !== 200) {
+      return;
+    }
+    setLoading(false);
+    setsnackbarOpen(true);
+    // navigate("/admin");
+  };
+
+  const handleSelectChange = (event: SelectChangeEvent) => {
+    setRole(event.target.value as IUserRole);
   };
   return (
     <>
       <Sidebar />
       <MainBodyWrapper>
         <MenuHeader>Редактирование пользователя</MenuHeader>
-        <Form>
-          <Form.Group className="mb-3">
-            <Form.Label>Имя пользователя</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Имя пользователя"
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-              }}
-            />
-          </Form.Group>
+        <Stack spacing={2}>
+          <TextField
+            required
+            label="Имя пользователя"
+            value={name}
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
+          />
 
-          <Form.Group className="mb-3">
-            <Form.Label>Опыт</Form.Label>
-            <Form.Control
-              type="number"
-              placeholder="Опыт"
-              value={exp}
-              onChange={(e) => {
-                setExp(parseInt(e.target.value));
-              }}
-            />
-          </Form.Group>
+          <TextField
+            required
+            label="Опыт"
+            value={exp}
+            onChange={(e) => {
+              setExp(parseInt(e.target.value));
+            }}
+          />
 
-          <Form.Group className="mb-3">
-            <Dropdown>
-              <Dropdown.Toggle variant="success" id="dropdown-basic">
-                {role}
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                <Dropdown.Item
-                  onClick={() => {
-                    setRole("USER");
-                  }}
-                >
-                  USER
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    setRole("ADMIN");
-                  }}
-                >
-                  ADMIN
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </Form.Group>
-          
-          <Button onClick={sendData} variant="primary">
-            Submit
-          </Button>
-        </Form>
+          <Select value={role} label="Role" onChange={handleSelectChange}>
+            <MenuItem value={"USER"}>User</MenuItem>
+            <MenuItem value={"ADMIN"}>Admin</MenuItem>
+          </Select>
+
+          {loading ? (
+            <CircularProgress />
+          ) : (
+            <Button variant="outlined" onClick={sendData}>
+              Submit
+            </Button>
+          )}
+        </Stack>
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={4000}
+          onClose={handleSnackbarClose}
+          message="User info updated"
+        />
       </MainBodyWrapper>
     </>
   );

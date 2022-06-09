@@ -1,5 +1,11 @@
-import styled from "styled-components";
+import styled from "@emotion/styled";
 import { BG_COLOR, BG_COLOR_HOVER, LIGHT_GRAY } from "../../constants";
+
+export const listStyle = {
+  width: "100%",
+  maxWidth: 360,
+  color: 'white'
+};
 
 export const SidebarWrapper = styled.div`
   display: flex;
@@ -10,9 +16,10 @@ export const SidebarWrapper = styled.div`
 `;
 
 export const Logo = styled.img`
+  margin: 1vh;
   border-radius: 50%;
   border: solid;
-  border-width: 5px;
+  border-width: 3px;
   height: 10vw;
   width: 10vw;
 `;
@@ -21,11 +28,12 @@ export const SidebarButton = styled.button`
   background-color: ${BG_COLOR};
   border: none;
   color: white;
-  padding: 15px 32px;
+  width: 100%;
+  padding: 0.5vh 1.5vw;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
+  font-size: 2vh;
   cursor: pointer;
   :hover {
     transition: 0.2s;

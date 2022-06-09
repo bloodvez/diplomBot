@@ -54,7 +54,7 @@ class TrashServer implements ITrashServer {
     this.tlgBot = new Bot(process.env.BOT_TOKEN);
     this.tlgBot.command("start", (ctx) => {
       if (ctx.message.chat.type !== "private") {
-        ctx.api.sendMessage(ctx.message.from.id,"Type anything to start");
+        ctx.api.sendMessage(ctx.message.from.id,"Введите что угодно, чтобы начать");
         return
       }
       registerNewUser(ctx)
@@ -66,7 +66,7 @@ class TrashServer implements ITrashServer {
     // Adds menu button on the left of the chat box
     // Not sure if need to set commands every time; just in case
     this.tlgBot.api.setMyCommands([
-      { command: "start", description: "Start the bot" },
+      { command: "start", description: "Начать" },
     ]);
     this.tlgBot.catch(errorHandler);
     this.tlgBot.start();

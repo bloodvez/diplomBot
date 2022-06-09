@@ -49,7 +49,7 @@ export interface ITrashState {
   setProfilePictureBlob(blobText: string): void;
   fetchCurrentUserData(): void;
   fetchUserData(tlgID: number): Promise<UserDataResponse | null>;
-  sendUserData(data:UserDataSend): Promise<void>;
+  sendUserData(data:UserDataSend): Promise<number>;
   refreshToken(): void;
   fetchProfilePicture(): void;
   fetchlistOfUsers(): void;
