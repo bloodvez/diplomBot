@@ -21,8 +21,9 @@ function LoggingIn() {
       const data = await response.json();
       localStorage.setItem("accessToken", data.accessToken);
       localStorage.setItem("refreshToken", param);
-      trash.fetchCurrentUserData();
-      trash.fetchProfilePicture();
+      trash.init()
+      // trash.fetchCurrentUserData();
+      // trash.fetchProfilePicture();
       navigate("/");
     };
 

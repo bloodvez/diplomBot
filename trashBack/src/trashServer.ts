@@ -54,8 +54,12 @@ class TrashServer implements ITrashServer {
     this.tlgBot = new Bot(process.env.BOT_TOKEN);
     this.tlgBot.command("start", (ctx) => {
       if (ctx.message.chat.type !== "private") {
-        ctx.api.sendMessage(ctx.message.from.id,"Введите что угодно, чтобы начать");
-        return
+        try {
+          ctx.api.sendMessage(ctx.message.from.id,"Введите что угодно, чтобы начать");
+          return
+        } catch (error) {
+          console.log(error);
+        }
       }
       registerNewUser(ctx)
       menuMiddleware.replyToContext(ctx);

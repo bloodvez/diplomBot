@@ -14,7 +14,6 @@ export function AdminControl() {
       navigate("/", { replace: true });
       return;
     }
-    trash.fetchlistOfUsers();
   });
   return (
     <>

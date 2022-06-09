@@ -1,37 +1,39 @@
 import { makeAutoObservable } from "mobx";
-import { $authHost, $host } from "../http";
-import {
-  IUserRole,
-  IUserState,
-  UserRefreshResponse,
-  UserDataResponse,
-  IUser,
-  ITrashState,
-  UserDataSend,
-} from "./interfaces";
+import { fetchCurrentUserData, fetchProfilePicture } from "../http/methods";
+import { IUserRole, IUserState, ITrashState } from "./interfaces";
 
 export class TrashStore implements ITrashState {
-  loading: boolean;
-  userState: IUserState;
-  tlgId: string;
-  exp: number;
-  profilePictureBlob: string;
-  role: IUserRole;
-  name: string;
-  createdAt: Date | null;
-  userList: IUser[] | null;
+  loading: boolean = false;
+  userState: IUserState = "LOADING";
+  tlgId: string = "";
+  exp: number = 0;
+  profilePictureBlob: string = "./img/logo.jpg";
+  role: IUserRole = "USER";
+  createdAt: Date | null = null;
+  name: string = "";
 
   constructor() {
-    this.loading = false;
-    this.userState = "LOADING";
-    this.tlgId = "";
-    this.exp = 0;
-    this.profilePictureBlob = "./img/logo.jpg";
-    this.role = "USER";
-    this.name = "";
-    this.createdAt = null;
-    this.userList = null;
     makeAutoObservable(this);
+    this.init();
+  }
+
+  async init() {
+    const currentUserData = await fetchCurrentUserData();
+    if (!currentUserData) {
+      this.setUserState("ERROR");
+      return;
+    }
+
+    this.setText(currentUserData.id);
+    this.setExp(currentUserData.exp);
+    this.setName(currentUserData.name);
+    this.setRole(currentUserData.role);
+    this.setCreatedAt(new Date(currentUserData.createdAt));
+    this.setUserState("NORMAL_RESPONSE");
+
+    const pfpBlob = await fetchProfilePicture();
+    if (!pfpBlob) return;
+    this.setProfilePictureBlob(pfpBlob);
   }
 
   setLoading(state: boolean): void {
@@ -62,103 +64,7 @@ export class TrashStore implements ITrashState {
     this.name = name;
   }
 
-  setUserList(list: IUser[]) {
-    this.userList = list;
-  }
-
   setCreatedAt(date: Date) {
     this.createdAt = date;
-  }
-
-  async fetchCurrentUserData() {
-    try {
-      const res = await $authHost.get<UserDataResponse>("api/user/");
-      this.setText(res.data.id);
-      this.setExp(res.data.exp);
-      this.setName(res.data.name);
-      this.setRole(res.data.role);
-      this.setCreatedAt(new Date(res.data.createdAt));
-      this.setUserState("NORMAL_RESPONSE");
-    } catch (error) {
-      console.log("error in fetchUserData", error);
-      this.setUserState("ERROR");
-    }
-  }
-
-  async fetchUserData(tlgID: number): Promise<UserDataResponse | null> {
-    try {
-      const res = await $authHost.get<UserDataResponse>(
-        `api/user/getUser?id=${tlgID}`
-      );
-      return res.data;
-    } catch (error) {
-      console.log("error in fetchUserData", error);
-      this.setUserState("ERROR");
-      return null;
-    }
-  }
-
-  async sendUserData(data: UserDataSend): Promise<number> {
-    try {
-      const res = await $authHost.post<UserDataResponse>(
-        "api/user/postUser",
-        data
-      );
-      if (res.status !== 200) {
-        return res.status;
-      }
-      return res.status;
-    } catch (err:any) {
-      return 404
-    }
-  }
-
-  async fetchProfilePicture() {
-    try {
-      const res = await $authHost.get("api/user/picture", {
-        responseType: "blob",
-        timeout: 30000,
-      });
-      let objectURL = URL.createObjectURL(res.data);
-      this.setProfilePictureBlob(objectURL);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async fetchlistOfUsers() {
-    try {
-      const res = await $authHost.get<IUser[]>("api/user/getUsers");
-      this.setUserList(res.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async refreshToken() {
-    try {
-      const refreshToken = localStorage.getItem("refreshToken");
-      if (refreshToken === null) return console.log("no token");
-
-      const res = await $host.post<UserRefreshResponse>("api/user/refresh", {
-        refreshToken: refreshToken,
-      });
-
-      localStorage.setItem("accessToken", res.data.accessToken);
-    } catch (error) {
-      console.log("error in refreshToken", error);
-      this.setUserState("ERROR");
-    }
-  }
-
-  async dispatchAction(actionType: string = "sendMsg", payload: Object) {
-    try {
-      $authHost.post("api/user/action", {
-        actionType: actionType,
-        payload: payload,
-      });
-    } catch (error) {
-      console.log("error in dispatchAction", error);
-    }
   }
 }

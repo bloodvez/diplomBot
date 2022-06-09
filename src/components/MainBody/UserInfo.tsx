@@ -13,10 +13,8 @@ import MenuHeader from "./MenuHeader";
 const UserInfo = observer(() => {
   const trash = React.useContext(TrashContext);
   const [timeString, settimeString] = React.useState("");
-  React.useEffect(() => {
-    trash.fetchCurrentUserData();
-    trash.fetchProfilePicture();
 
+  React.useEffect(() => {
     if (trash.createdAt) {
       const timeString = beautifyDate(trash.createdAt);
       settimeString(timeString);

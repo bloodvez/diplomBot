@@ -1,4 +1,4 @@
-export interface UserDataResponse {
+export type UserDataResponse = {
   exp: number;
   id: string;
   role: IUserRole;
@@ -12,7 +12,7 @@ export type UserDataSend = {
   name: string;
 }
 
-export interface UserRefreshResponse {
+export type UserRefreshResponse = {
   accessToken: string;
 }
 
@@ -41,18 +41,10 @@ export interface ITrashState {
   role: IUserRole;
   name: string;
   createdAt: Date | null;
-  userList: IUser[] | null;
+  init():void;
   setText(text: string): void;
   setExp(amount: number): void;
   setLoading(state: boolean): void;
   setRole(role: IUserRole): void;
-  setUserList(list: any): void;
-  setProfilePictureBlob(blobText: string): void;
-  fetchCurrentUserData(): void;
-  fetchUserData(tlgID: number): Promise<UserDataResponse | null>;
-  sendUserData(data:UserDataSend): Promise<number>;
-  refreshToken(): void;
-  fetchProfilePicture(): void;
-  fetchlistOfUsers(): void;
-  dispatchAction(actionType: string, payload: any): void;
+  setUserState(state: IUserState) : void;
 }

@@ -18,42 +18,44 @@ const Sidebar = observer(() => {
   const navigateTo = (path: string) => {
     if (currentPath === path) return;
 
-    setcurrentPath(path)
+    setcurrentPath(path);
     navigate(`/${path}`, { replace: true });
   };
 
   return (
     <SidebarWrapper>
       <Logo src={trash.profilePictureBlob} />
-      <List sx={listStyle}>
-        <ListItem button>
-          <ListItemText
-            primary="Пользователь"
-            onClick={() => {
-              navigateTo("")
-            }}
-          />
-        </ListItem>
-        <Divider />
-        <ListItem button divider>
-          <ListItemText
-            primary="Действия"
-            onClick={() => {
-              navigateTo("actions")
-            }}
-          />
-        </ListItem>
-        {trash.role === "ADMIN" && (
+      {trash.userState === "NORMAL_RESPONSE" && (
+        <List sx={listStyle}>
           <ListItem button>
             <ListItemText
-              primary="Админ"
+              primary="Пользователь"
               onClick={() => {
-                navigateTo("admin");
+                navigateTo("");
               }}
             />
           </ListItem>
-        )}
-      </List>
+          <Divider />
+          <ListItem button divider>
+            <ListItemText
+              primary="Действия"
+              onClick={() => {
+                navigateTo("actions");
+              }}
+            />
+          </ListItem>
+          {trash.role === "ADMIN" && (
+            <ListItem button>
+              <ListItemText
+                primary="Админ"
+                onClick={() => {
+                  navigateTo("admin");
+                }}
+              />
+            </ListItem>
+          )}
+        </List>
+      )}
     </SidebarWrapper>
   );
 });

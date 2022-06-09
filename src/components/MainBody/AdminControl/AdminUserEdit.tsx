@@ -15,6 +15,7 @@ import { MainBodyWrapper } from "../components";
 import { Button, Select, SelectChangeEvent } from "@mui/material";
 import MenuHeader from "../MenuHeader";
 import { WarningBackdrop } from "./WarningBackdrop";
+import { fetchUserData, sendUserData } from "../../../http/methods";
 
 type IResponseTypes = "success" | "fail";
 
@@ -36,13 +37,19 @@ function AdminUserEdit() {
     React.useState<IResponseTypes>("success");
 
   React.useEffect(() => {
-    trash.fetchUserData(parseInt(id)).then((data) => {
-      setName(data!.name);
-      setRole(data!.role);
-      setExp(data!.exp);
-      setpreviousRole(data!.role);
-    });
-  }, [trash, id]);
+    console.log('fetchin');
+    fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const fetchData = async () => {
+    const data = await fetchUserData(parseInt(id));
+    if (!data) return;
+    setName(data!.name);
+    setRole(data!.role);
+    setExp(data!.exp);
+    setpreviousRole(data!.role);
+  };
 
   const handleSnackbarClose = (
     event: React.SyntheticEvent | Event,
@@ -57,7 +64,7 @@ function AdminUserEdit() {
   const sendData = async () => {
     setLoading(true);
     const payload = { name: name, role: role, exp: exp, tlgID: id };
-    const resCode = await trash.sendUserData(payload);
+    const resCode = await sendUserData(payload);
     if (resCode !== 200) {
       setLoading(false);
       setresponseStatus("fail");
@@ -67,8 +74,8 @@ function AdminUserEdit() {
     setLoading(false);
     setresponseStatus("success");
     setSnackbarOpen(true);
-    if(trash.tlgId === id && previousRole === "ADMIN" && role === "USER"){
-      navigate('/')
+    if (trash.tlgId === id && previousRole === "ADMIN" && role === "USER") {
+      navigate("/");
     }
   };
 
@@ -140,7 +147,13 @@ function AdminUserEdit() {
             <Alert severity="error">Произошла ошибка</Alert>
           )}
         </Snackbar>
-        <WarningBackdrop open={warningOpen} closeBackdrop={() =>{setWarningOpen(false)} } onAccept={sendData}/>
+        <WarningBackdrop
+          open={warningOpen}
+          closeBackdrop={() => {
+            setWarningOpen(false);
+          }}
+          onAccept={sendData}
+        />
       </MainBodyWrapper>
     </>
   );

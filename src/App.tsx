@@ -2,7 +2,6 @@ import { observer } from "mobx-react-lite";
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import styled from "styled-components";
-import { TrashContext } from ".";
 import LoggingIn from "./components/LoggingIn";
 import { AdminControl } from "./components/MainBody/AdminControl/AdminControl";
 import AdminUserEdit from "./components/MainBody/AdminControl/AdminUserEdit";
@@ -20,12 +19,6 @@ height 60vh;
 `;
 
 const App = observer(() => {
-  const trash = React.useContext(TrashContext);
-
-  React.useEffect(() => {
-    trash.fetchCurrentUserData();
-    trash.fetchProfilePicture();
-  }, [trash]);
 
   return (
     <BrowserRouter>
