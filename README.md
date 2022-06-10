@@ -1,6 +1,6 @@
 # TrashBot v2
 
-Web GUI for [discord.js](https://discord.js.org/) bot
+Telegram bot with WebGUI
 
 ![logo](./public/img/logo.jpg)
 
