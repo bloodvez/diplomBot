@@ -6,21 +6,6 @@ import {
   UserRefreshResponse,
 } from "../state/interfaces";
 
-// export async function fetchUserData(
-//   tlgID: number
-// ): Promise<UserDataResponse | null> {
-//   try {
-//     const res = await $authHost.get<UserDataResponse>(
-//       `api/user/getUser?id=${tlgID}`
-//     );
-//     return res.data;
-//   } catch (error) {
-//     console.log("error in fetchUserData", error);
-//     this.setUserState("ERROR");
-//     return null;
-//   }
-// }
-
 export async function fetchlistOfUsers(): Promise<IUser[] | null> {
   try {
     const { data } = await $authHost.get<IUser[]>("api/user/getUsers");
@@ -56,7 +41,7 @@ export async function fetchUserData(
     const res = await $authHost.get<UserDataResponse>(
       `api/user/getUser?id=${tlgID}`
     );
-    if (res.status !== 200) return null
+    if (res.status !== 200) return null;
     return res.data;
   } catch (error) {
     console.log("error in fetchUserData", error);
@@ -105,16 +90,40 @@ export async function fetchCurrentUserData(): Promise<UserDataResponse | null> {
   }
 }
 
-export async function dispatchAction(
-  actionType: string = "sendMsg",
-  payload: Object
-) {
+type pingPayload = {
+  text: string;
+};
+
+type sendMessagePayload = {
+  tlgID: string;
+  text: string;
+};
+
+export interface ISendMessageAction {
+  actionType: "SEND_MESSAGE";
+  payload: sendMessagePayload;
+}
+
+export interface IPingAction {
+  actionType: "PING";
+  payload: pingPayload;
+}
+
+type actionsTypes = ISendMessageAction | IPingAction;
+
+export async function dispatchAction(action: actionsTypes): Promise<boolean> {
   try {
-    $authHost.post("api/user/action", {
-      actionType: actionType,
-      payload: payload,
+    const res = await $authHost.post("api/user/action", {
+      actionType: action.actionType,
+      payload: action.payload,
     });
+    if(res.status !== 200){
+      console.log('not ok');
+      return false
+    }
+    return true
   } catch (error) {
     console.log("error in dispatchAction", error);
+    return false
   }
 }

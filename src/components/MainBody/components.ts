@@ -7,6 +7,14 @@ export const MainBodyWrapper = styled.div`
   flex: auto;
 `;
 
+export const ActionsWrapper = styled.div`
+display: flex;
+flex-direction: column;
+overflow: scroll;
+overflow-x: hidden;
+overflow-y: auto;
+`;
+
 export const Header = styled.div`
   background-color: ${BG_COLOR};
   width: 100%;

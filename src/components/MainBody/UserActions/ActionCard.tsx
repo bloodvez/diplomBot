@@ -12,7 +12,7 @@ interface ActionCardProp {
 export function ActionCard(props:ActionCardProp) {
 
   return (
-    <Card>
+    <Card style={{'overflow': 'visible'}}>
     <CardContent>
       <Typography gutterBottom variant="h5" component="div">
         {props.commandName}

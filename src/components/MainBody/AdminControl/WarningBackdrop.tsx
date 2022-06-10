@@ -19,17 +19,17 @@ export function WarningBackdrop(props: WarningBackdropProp) {
       <Card sx={{ maxWidth: 345 }}>
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-            You're about to demote yourself
+            Вы убираете ваши права администратора.
           </Typography>
           <Typography variant="body2" color="text.secondary">
-              Are you sure?
+              Вы уверены?
           </Typography>
         </CardContent>
         <CardActions>
           <Button color={"error"} variant={'outlined'} onClick={() => {
               props.onAccept()
               props.closeBackdrop()
-          }}>Accept</Button>
+          }}>Подтвердить</Button>
         </CardActions>
       </Card>
     </Backdrop>

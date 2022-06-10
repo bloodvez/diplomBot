@@ -19,7 +19,7 @@ try {
 }
 
 const menuTemplate = new MenuTemplate<Context>(
-  (ctx) => `Hey ${ctx.from.first_name}!`
+  (ctx) => `${ctx.from.first_name}, Добро пожаловать в мою дипломную работу.`
 );
 
 menuTemplate.interact("Добавить 10 опыта", "addExpButton", {

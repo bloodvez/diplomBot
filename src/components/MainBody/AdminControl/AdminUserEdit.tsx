@@ -75,6 +75,7 @@ function AdminUserEdit() {
     setresponseStatus("success");
     setSnackbarOpen(true);
     if (trash.tlgId === id && previousRole === "ADMIN" && role === "USER") {
+      trash.setRole(role)
       navigate("/");
     }
   };
@@ -122,8 +123,8 @@ function AdminUserEdit() {
             }}
           />
           <Select value={role} label="Role" onChange={handleSelectChange}>
-            <MenuItem value={"USER"}>User</MenuItem>
-            <MenuItem value={"ADMIN"}>Admin</MenuItem>
+            <MenuItem value={"USER"}>Пользователь</MenuItem>
+            <MenuItem value={"ADMIN"}>Администратор</MenuItem>
           </Select>
           {loading ? (
             <CircularProgress />

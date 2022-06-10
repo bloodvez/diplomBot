@@ -11,7 +11,6 @@ export function RefreshToken() {
     if (!token){
       trash.setUserState('ERROR')
       console.log('cant refresh token');
-      
       return
     }  
     localStorage.setItem("accessToken", token);

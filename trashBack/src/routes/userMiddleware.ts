@@ -9,22 +9,13 @@ import {
 } from "../controllers/userController";
 import { generateAccessToken } from "../utils";
 import { getProfilePictureURL } from "../tlgMiddleware";
-import { IUserRole } from "../models/models";
+import {
+  ActionRequestBody,
+  trashUser,
+  TypedRequestBody,
+  UserDataResponse,
+} from "../interfaces";
 dotenv.config();
-
-interface TypedRequestBody extends Request {
-  user: {
-    tlgID: string;
-  };
-}
-
-interface UserDataResponse {
-  id: number;
-  exp: number;
-  role: IUserRole;
-  name: string;
-  createdAt: string;
-}
 
 export function authenticateToken(
   req: Request,
@@ -55,10 +46,10 @@ export async function refreshToken(
   const found = await findRefreshToken(refreshToken);
   if (!found) return res.sendStatus(403);
 
-  verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+  verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user:trashUser) => {
     if (err) return res.sendStatus(403);
 
-    const newToken = generateAccessToken({ tlgID: parseInt(user.tlgID) });
+    const newToken = generateAccessToken({ tlgID: user.tlgID, role:user.role });
     res.json({ accessToken: newToken });
   });
 }
@@ -82,7 +73,7 @@ export async function userGetInfo(
     };
     res.json(respJSON);
   } else {
-    const found = await getUser(parseInt(req.user.tlgID));
+    const found = await getUser(req.user.tlgID);
     if (!found) {
       res.sendStatus(404);
       return;
@@ -102,14 +93,18 @@ export async function userUpdateUserInfo(
   req: TypedRequestBody,
   res: Response
 ): Promise<void> {
-  if(!req.body.tlgID){
+  if (!req.body.tlgID) {
     res.sendStatus(418);
   }
   const found = await getUser(parseInt(req.body.tlgID));
   if (!found) {
     res.sendStatus(404);
   } else {
-    found.update({name: req.body.name, exp:req.body.exp, role: req.body.role})
+    found.update({
+      name: req.body.name,
+      exp: req.body.exp,
+      role: req.body.role,
+    });
     res.sendStatus(200);
   }
 }
@@ -119,7 +114,7 @@ export async function userGetProfilePicture(
   res: Response
 ): Promise<void> {
   const profilePicURL = await getProfilePictureURL(
-    parseInt(req.user.tlgID),
+    req.user.tlgID,
     trashServer.tlgBot.api
   );
   const fileURL = `https://api.telegram.org/file/bot${process.env.BOT_TOKEN}/${profilePicURL}`;
@@ -140,10 +135,14 @@ export async function userListOfUsers(
   res.json(found);
 }
 
-export function userAction(req: TypedRequestBody, res: Response): void {
-  if (req.body.payload.text && req.body.payload.text !== "") {
-    trashServer.botFunc(req.body.payload.text);
-  } else {
-    res.sendStatus(418);
+export async function userAction(
+  req: ActionRequestBody,
+  res: Response
+): Promise<void> {
+  const result = await trashServer.executeAction(req.body, req.user.role);
+  if (result !== true) {
+    res.sendStatus(500);
+    return;
   }
+  res.sendStatus(200);
 }

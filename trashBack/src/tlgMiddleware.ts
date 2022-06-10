@@ -9,7 +9,7 @@ export async function registerNewUser(ctx: Context) {
   let userTlgID = user.id;
   const DbUser = await getUser(userTlgID);
   if (DbUser) return;
-  const refreshToken = generateRefreshToken({ tlgID: userTlgID });
+  const refreshToken = generateRefreshToken({ tlgID: userTlgID, role: "USER"});
   await User.create({ tlgID: userTlgID, refreshToken: refreshToken, name: ctx.from.first_name });
   return false;
 }

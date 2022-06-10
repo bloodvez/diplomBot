@@ -1,5 +1,6 @@
 import sequelize from "../db";
 import { DataTypes, Model } from "sequelize";
+import { IUserRole } from "../interfaces";
 
 interface UserAttributes {
   id?: number | null;
@@ -10,8 +11,6 @@ interface UserAttributes {
   name: string;
   createdAt: string;
 }
-
-export type IUserRole = "USER" | "ADMIN";
 
 export class User extends Model<UserAttributes> implements UserAttributes {
   exp!: number;

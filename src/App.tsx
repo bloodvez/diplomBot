@@ -5,7 +5,7 @@ import styled from "styled-components";
 import LoggingIn from "./components/LoggingIn";
 import { AdminControl } from "./components/MainBody/AdminControl/AdminControl";
 import AdminUserEdit from "./components/MainBody/AdminControl/AdminUserEdit";
-import { UserActions } from "./components/MainBody/UserControl";
+import { UserActions } from "./components/MainBody/UserActions";
 import UserInfo from "./components/MainBody/UserInfo";
 
 const Root = styled.div`

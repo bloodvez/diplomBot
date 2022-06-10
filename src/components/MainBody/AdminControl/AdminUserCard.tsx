@@ -27,6 +27,9 @@ function AdminUserCard(prop: UserCardProp) {
           <Typography variant="body2" color="text.secondary">
             Роль: {prop.user.role}
           </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Telegram ID: {prop.user.tlgID}
+          </Typography>
         </CardContent>
         <CardActions>
           <Button

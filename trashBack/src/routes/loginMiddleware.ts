@@ -12,6 +12,6 @@ export async function login(req: Request, res: Response): Promise<void> {
     res.sendStatus(403);
     return;
   }
-  const newToken = generateAccessToken({ tlgID: foundToken.tlgID });
+  const newToken = generateAccessToken({ tlgID: foundToken.tlgID, role: "USER"});
   res.json({ accessToken: newToken });
 }
