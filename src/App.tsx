@@ -19,7 +19,6 @@ height 60vh;
 `;
 
 const App = observer(() => {
-
   return (
     <BrowserRouter>
       <Root>
