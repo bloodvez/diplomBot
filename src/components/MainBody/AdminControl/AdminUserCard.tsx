@@ -25,6 +25,9 @@ function AdminUserCard(prop: UserCardProp) {
             Опыт: {prop.user.exp}
           </Typography>
           <Typography variant="body2" color="text.secondary">
+            Уровень: {prop.user.level}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
             Роль: {prop.user.role}
           </Typography>
           <Typography variant="body2" color="text.secondary">

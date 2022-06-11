@@ -29,6 +29,7 @@ function AdminUserEdit() {
   const [role, setRole] = React.useState<IUserRole>("USER");
   const [previousRole, setpreviousRole] = React.useState<IUserRole>("USER");
   const [exp, setExp] = React.useState<number>(0);
+  const [level, setLevel] = React.useState<number>(1);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [warningOpen, setWarningOpen] = React.useState<boolean>(false);
   const [snackbarOpen, setSnackbarOpen] = React.useState<boolean>(false);
@@ -37,7 +38,6 @@ function AdminUserEdit() {
     React.useState<IResponseTypes>("success");
 
   React.useEffect(() => {
-    console.log('fetchin');
     fetchData();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -48,6 +48,7 @@ function AdminUserEdit() {
     setName(data!.name);
     setRole(data!.role);
     setExp(data!.exp);
+    setLevel(data!.level)
     setpreviousRole(data!.role);
   };
 
@@ -63,7 +64,7 @@ function AdminUserEdit() {
 
   const sendData = async () => {
     setLoading(true);
-    const payload = { name: name, role: role, exp: exp, tlgID: id };
+    const payload = { name: name, role: role, exp: exp, tlgID: id, level: level};
     const resCode = await sendUserData(payload);
     if (resCode !== 200) {
       setLoading(false);
@@ -120,6 +121,14 @@ function AdminUserEdit() {
             value={exp}
             onChange={(e) => {
               setExp(parseInt(e.target.value));
+            }}
+          />
+          <TextField
+            required
+            label="Уровень"
+            value={level}
+            onChange={(e) => {
+              setLevel(parseInt(e.target.value));
             }}
           />
           <Select value={role} label="Role" onChange={handleSelectChange}>

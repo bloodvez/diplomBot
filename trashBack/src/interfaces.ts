@@ -49,4 +49,5 @@ export interface UserDataResponse {
   role: IUserRole;
   name: string;
   createdAt: string;
+  level:number;
 }

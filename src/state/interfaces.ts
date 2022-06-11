@@ -4,12 +4,14 @@ export type UserDataResponse = {
   role: IUserRole;
   name: string;
   createdAt: string;
+  level:number;
 }
 
 export type UserDataSend = {
   exp: number;
   role: IUserRole;
   name: string;
+  level: number;
 }
 
 export type UserRefreshResponse = {
@@ -25,6 +27,7 @@ export interface IUser {
   role: "ADMIN" | "USER";
   tlgID: string;
   updatedAt: string;
+  level: number;
 }
 
 export type IUserResponses = UserDataResponse | UserRefreshResponse;
@@ -41,10 +44,12 @@ export interface ITrashState {
   role: IUserRole;
   name: string;
   createdAt: Date | null;
+  level: number;
   init():void;
   setText(text: string): void;
   setExp(amount: number): void;
   setLoading(state: boolean): void;
   setRole(role: IUserRole): void;
   setUserState(state: IUserState) : void;
+  setLevel(level:number):void;
 }

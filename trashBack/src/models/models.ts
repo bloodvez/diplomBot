@@ -10,16 +10,18 @@ interface UserAttributes {
   exp: number;
   name: string;
   createdAt: string;
+  level: number;
 }
 
 export class User extends Model<UserAttributes> implements UserAttributes {
-  exp!: number;
-  id!: number;
-  tlgID!: number;
-  refreshToken!: string;
-  role!: IUserRole;
-  name!: string;
+  exp: number;
+  id: number;
+  tlgID: number;
+  refreshToken: string;
+  role: IUserRole;
+  name: string;
   createdAt: string;
+  level: number;
 }
 
 User.init(
@@ -36,6 +38,7 @@ User.init(
     exp: { type: DataTypes.INTEGER, defaultValue: 0 },
     name: { type: DataTypes.STRING },
     createdAt: { type: DataTypes.DATE },
+    level: { type: DataTypes.INTEGER },
   },
   {
     sequelize,

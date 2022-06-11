@@ -9,8 +9,12 @@ export async function registerNewUser(ctx: Context) {
   let userTlgID = user.id;
   const DbUser = await getUser(userTlgID);
   if (DbUser) return;
-  const refreshToken = generateRefreshToken({ tlgID: userTlgID, role: "USER"});
-  await User.create({ tlgID: userTlgID, refreshToken: refreshToken, name: ctx.from.first_name });
+  const refreshToken = generateRefreshToken({ tlgID: userTlgID, role: "USER" });
+  await User.create({
+    tlgID: userTlgID,
+    refreshToken: refreshToken,
+    name: ctx.from.first_name,
+  });
   return false;
 }
 
@@ -22,17 +26,23 @@ export async function getProfilePictureURL(
   if (!chat.photo) return null;
 
   const file = await api.getFile(chat.photo.big_file_id);
-  return file.file_path
+  return file.file_path;
 }
 
-export async function addExpToUser(
-  userID: number,
-  amount: number
-): Promise<boolean> {
+export async function increaseLevel(userID: number): Promise<boolean | number> {
   const foundUser = await getUser(userID);
   if (!foundUser) return false;
-  foundUser.increment("exp", { by: amount });
-  return true;
+
+  const currentExp = foundUser.exp;
+  const currentLevel = foundUser.level;
+  const neededExp = Math.floor(100 * Math.pow(currentLevel, 1.3));
+
+  if (currentExp >= neededExp) {
+    const leftoverExp = currentExp - neededExp;
+    foundUser.update({ exp: leftoverExp, level: currentLevel + 1 });
+    return true;
+  }
+  return neededExp - currentExp;
 }
 
 export function errorHandler(ctx: BotError) {

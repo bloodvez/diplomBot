@@ -13,8 +13,14 @@ import MenuHeader from "./MenuHeader";
 const UserInfo = observer(() => {
   const trash = React.useContext(TrashContext);
   const [timeString, settimeString] = React.useState("");
+  const [expLeft, setexpLeft] = React.useState<number>(0);
 
   React.useEffect(() => {
+    trash.init()
+    let left = Math.floor(100*Math.pow(trash.level, 1.3)) - trash.exp
+    if (left <= 0) {left = 0}
+    setexpLeft(left)
+
     if (trash.createdAt) {
       const timeString = beautifyDate(trash.createdAt);
       settimeString(timeString);
@@ -35,7 +41,10 @@ const UserInfo = observer(() => {
                   {`Имя: ${trash.name}`}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  {`Опыт: ${trash.exp}`}
+                  {`Опыт: ${trash.exp}. До следующего: ${expLeft}`}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {`Уровень: ${trash.level}`}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   {`Зарегистрирован: ${timeString}`}

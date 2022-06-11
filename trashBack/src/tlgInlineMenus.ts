@@ -6,7 +6,7 @@ import {
 } from "grammy-inline-menu";
 import { Context } from "grammy";
 import { getUser } from "./controllers/userController";
-import { addExpToUser } from "./tlgMiddleware";
+import { increaseLevel } from "./tlgMiddleware";
 import { readFileSync } from "node:fs";
 
 const memes: string[] = [];
@@ -22,16 +22,20 @@ const menuTemplate = new MenuTemplate<Context>(
   (ctx) => `${ctx.from.first_name}, Добро пожаловать в мою дипломную работу.`
 );
 
-menuTemplate.interact("Добавить 10 опыта", "addExpButton", {
+menuTemplate.interact("Поменять опыт на уровень", "lvlExchangeButton", {
   do: async (ctx) => {
-    const success = await addExpToUser(ctx.from.id, 10);
-    if (!success) return ctx.answerCallbackQuery("Вы не зарегестрированы");
-    ctx.answerCallbackQuery("Опыт добавлен")
+    const result:boolean | number = await increaseLevel(ctx.from.id);
+    if (!result) return ctx.answerCallbackQuery("Вы не зарегестрированы");
+    if (typeof result === 'number') {
+      ctx.answerCallbackQuery(`Недостаточно ${result} опыта`)
+      return ".."
+    }
+    ctx.answerCallbackQuery("Добавлен 1 уровень")
     return "..";
   },
 });
 
-menuTemplate.interact("Показать кол-во опыта", "showExpButton", {
+menuTemplate.interact("Показать опыт", "showExpButton", {
   joinLastRow: true,
   do: async (ctx) => {
     const { user } = await ctx.getAuthor();

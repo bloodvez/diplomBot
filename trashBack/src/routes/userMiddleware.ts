@@ -70,6 +70,7 @@ export async function userGetInfo(
       role: found.role,
       name: found.name,
       createdAt: found.createdAt,
+      level: found.level,
     };
     res.json(respJSON);
   } else {
@@ -84,6 +85,7 @@ export async function userGetInfo(
       role: found.role,
       name: found.name,
       createdAt: found.createdAt,
+      level: found.level,
     };
     res.json(respJSON);
   }
@@ -104,6 +106,7 @@ export async function userUpdateUserInfo(
       name: req.body.name,
       exp: req.body.exp,
       role: req.body.role,
+      level: req.body.level
     });
     res.sendStatus(200);
   }

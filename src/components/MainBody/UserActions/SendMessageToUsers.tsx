@@ -85,7 +85,7 @@ export function SendMessageToUsers() {
   };
 
   return (
-    <ActionCard commandName="Send Message to users">
+    <ActionCard commandName="Отправить сообщение пользователю">
       <Stack spacing={2}>
         <TextField
           required
@@ -95,7 +95,7 @@ export function SendMessageToUsers() {
           onChange={handleTextChange}
           helperText={helperText}
         />
-        <InputLabel id="userSelect">User</InputLabel>
+        <InputLabel id="userSelect">Пользователь</InputLabel>
         <Select
           labelId="userSelect"
           id="demo-simple-select"
@@ -112,7 +112,7 @@ export function SendMessageToUsers() {
           })}
         </Select>
         <Button variant="contained" color="success" onClick={handleClick}>
-          Send
+          Отправить
         </Button>
       <Snackbar
         open={snackbarOpen}
